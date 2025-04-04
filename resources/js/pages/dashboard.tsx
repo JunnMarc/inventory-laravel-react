@@ -4,10 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ShoppingCart, Package, DollarSign, AlertTriangle } from "lucide-react";
+import { type BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+    },
+];
 
 const Dashboard = () => {
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="p-6 space-y-6">
                 {/* Top Metrics Cards */}
@@ -18,7 +26,7 @@ const Dashboard = () => {
                             <Package className="h-5 w-5 text-blue-500" />
                         </CardHeader>
                         <CardContent>
-                            <p className="text-2xl font-bold">350</p>
+                            <p className="text-2xl font-bold">0</p>
                         </CardContent>
                     </Card>
 
@@ -28,7 +36,7 @@ const Dashboard = () => {
                             <AlertTriangle className="h-5 w-5 text-yellow-500" />
                         </CardHeader>
                         <CardContent>
-                            <p className="text-2xl font-bold">12</p>
+                            <p className="text-2xl font-bold">0</p>
                         </CardContent>
                     </Card>
 
@@ -38,7 +46,7 @@ const Dashboard = () => {
                             <ShoppingCart className="h-5 w-5 text-green-500" />
                         </CardHeader>
                         <CardContent>
-                            <p className="text-2xl font-bold">28</p>
+                            <p className="text-2xl font-bold">0</p>
                         </CardContent>
                     </Card>
 
@@ -48,7 +56,7 @@ const Dashboard = () => {
                             <DollarSign className="h-5 w-5 text-red-500" />
                         </CardHeader>
                         <CardContent>
-                            <p className="text-2xl font-bold">$5,230</p>
+                            <p className="text-2xl font-bold">₱0</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -78,19 +86,19 @@ const Dashboard = () => {
                             <TableBody>
                                 <TableRow>
                                     <TableCell>Apr 1, 2025</TableCell>
-                                    <TableCell>Chocolate Cake</TableCell>
+                                    <TableCell>Acer Monitor</TableCell>
                                     <TableCell>5</TableCell>
                                     <TableCell className="text-green-600">Completed</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Apr 1, 2025</TableCell>
-                                    <TableCell>Croissant</TableCell>
+                                    <TableCell>Dell Inspiron 15</TableCell>
                                     <TableCell>12</TableCell>
                                     <TableCell className="text-yellow-600">Pending</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>Apr 2, 2025</TableCell>
-                                    <TableCell>Sourdough Bread</TableCell>
+                                    <TableCell>Gigabyte RTX 4060 OC</TableCell>
                                     <TableCell>8</TableCell>
                                     <TableCell className="text-green-600">Completed</TableCell>
                                 </TableRow>
