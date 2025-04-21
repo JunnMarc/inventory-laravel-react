@@ -4,18 +4,46 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, Info, LayoutGrid } from 'lucide-react';
+import {
+    BookOpen,
+    ChevronDown,
+    Folder,
+    Info,
+    LayoutGrid,
+    Package,
+    Users,
+    ShoppingCart,
+    Trash2
+  } from 'lucide-react';
 import AppLogo from './app-logo';
+import { ZiggyVue} from 'ziggy-js'; // path may vary depending on your project
+console.log(ZiggyVue);
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: '/dashboard',
+        href: route('dashboard'),
         icon: LayoutGrid,
     },
+    { 
+        title: 'Products', 
+        href: route('dashboard'), 
+        icon: Package },
+    { 
+        title: 'Categories', 
+        href: route('dashboard'), 
+        icon: Folder },
+    { 
+        title: 'Employees', 
+        href: route('dashboard'), 
+        icon: Users },
+    { 
+        title: 'Orders', 
+        href:route('dashboard'), 
+        icon: ShoppingCart },
     {
         title: 'About',
-        href: '/',
+        href: route('dashboard'),
         icon: Info,
     },
 ];

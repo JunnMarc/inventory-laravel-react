@@ -10,6 +10,21 @@ export interface BreadcrumbItem {
     href: string;
 }
 
+export interface PageProps<T = {}> {
+    auth: {
+      user: {
+        id: number;
+        name: string;
+        email: string;
+      } | null;
+    };
+    flash: {
+      success?: string;
+      error?: string;
+    };
+    [key: string]: any;
+  } T;
+
 export interface NavGroup {
     title: string;
     items: NavItem[];
@@ -40,3 +55,4 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
