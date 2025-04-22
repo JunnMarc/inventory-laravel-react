@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\PartController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -15,7 +16,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-Route::get('/parts', [PartController::class, 'index'])->name('parts.index');
+Route::prefix('parts')->name('parts.')->group(function () {
+    Route::get('/', [PartController::class, 'index'])->name('index');
+    Route::get('/create', [PartController::class, 'create'])->name('create');
+    Route::post('/', [PartController::class, 'store'])->name('store');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    // Optional index or other routes if you want:
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+});
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

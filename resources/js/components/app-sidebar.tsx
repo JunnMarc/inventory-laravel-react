@@ -26,12 +26,12 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     { 
-        title: 'Products', 
-        href: route('dashboard'), 
+        title: 'Parts', 
+        href: route('parts.index'), 
         icon: Package },
     { 
         title: 'Categories', 
-        href: route('dashboard'), 
+        href: route('categories.index'), 
         icon: Folder },
     { 
         title: 'Employees', 
