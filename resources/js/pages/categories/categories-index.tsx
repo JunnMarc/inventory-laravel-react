@@ -22,7 +22,7 @@ import { route } from 'ziggy-js';
 
 type Category = {
   id: number;
-  name: string;
+  category_name: string;
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -43,10 +43,14 @@ export default function Categories() {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Categories" />
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-6 relative">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Categories</CardTitle>
+
+            {categories.length > 0 && (
+              <Button onClick={handleAdd}>Add category</Button>
+            )}
           </CardHeader>
 
           <CardContent>
@@ -64,9 +68,9 @@ export default function Categories() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {categories.map((category: any) => (
+                  {categories.map((category: Category) => (
                     <TableRow key={category.id}>
-                      <TableCell>{category.name}</TableCell>
+                      <TableCell>{category.category_name}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -74,6 +78,13 @@ export default function Categories() {
             )}
           </CardContent>
         </Card>
+
+        {/* Optional floating add button */}
+        {/*
+        <div className="fixed bottom-6 right-6">
+          <Button onClick={handleAdd}>Add category</Button>
+        </div>
+        */}
       </div>
     </AppLayout>
   );

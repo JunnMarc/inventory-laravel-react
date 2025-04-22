@@ -11,7 +11,7 @@ class PartController extends Controller
 {
     public function index()
     {
-        $parts = Part::all(); // or Paginate
+        $parts = Part::all(); // or paginate
         return Inertia::render('parts/parts-index', [
             'parts' => $parts
         ]);
@@ -19,9 +19,22 @@ class PartController extends Controller
 
     public function create() 
     {
-        $categories = Category::select('id', 'name')->get();
+        $categories = Category::select('id', 'category_name')->get();
         return inertia('parts/parts-create', [
             'categories' => $categories,
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        // Validate
+        $validated = $request->validate([
+            'part_name' => 'required|string|max:255',
+            'part_serial' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        Part::create($validated);
+        return redirect()->route('parts.index')->with('success', 'Part created successfully.');
     }
 }

@@ -34,7 +34,7 @@ const mainNavItems: NavItem[] = [
         href: route('categories.index'), 
         icon: Folder },
     { 
-        title: 'Employees', 
+        title: 'System Users', 
         href: route('dashboard'), 
         icon: Users },
     { 

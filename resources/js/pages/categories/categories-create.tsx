@@ -14,25 +14,29 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function CategoryCreate() {
   const { url } = usePage();
-  
+
   const urlParams = new URLSearchParams(url.split('?')[1]);
   const initialName = urlParams.get('name') ?? '';
 
-  const [categoryName, setCategoryName] = useState(initialName);
+  const [form, setForm] = useState({
+    category_name: initialName,
+  });
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-
   useEffect(() => {
-    setCategoryName(initialName);
+    setForm({ category_name: initialName });
   }, [initialName]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.post(route('categories.store'), { name: categoryName }, {
+    router.post(route('categories.store'), { name: form.category_name }, {
       onError: (err) => setErrors(err),
-      onSuccess: () => setCategoryName(''), 
+      onSuccess: () => setForm({ category_name: '' }),
     });
   };
+
+  const isFormValid = form.category_name.trim() !== '';
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -52,8 +56,10 @@ export default function CategoryCreate() {
                 <Input
                   id="category_name"
                   name="category_name"
-                  value={categoryName}
-                  onChange={(e) => setCategoryName(e.target.value)}
+                  value={form.category_name}
+                  onChange={(e) =>
+                    setForm({ ...form, category_name: e.target.value })
+                  }
                   className={errors.name ? 'border-red-500' : ''}
                 />
                 {errors.name && (
@@ -62,7 +68,11 @@ export default function CategoryCreate() {
               </div>
 
               <div className="pt-4">
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full dark:hover:bg-gray-300 hover:bg-gray-800 transition-colors"
+                  disabled={!isFormValid}
+                >
                   Save Category
                 </Button>
               </div>

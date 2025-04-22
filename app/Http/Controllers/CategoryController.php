@@ -18,11 +18,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|unique:categories,name|max:255',
+            'name' => 'required|string|unique:categories,category_name|max:255',
         ]);
 
         Category::create([
-            'name' => $request->input('name'),
+            'category_name' => $request->input('name'),
         ]);
 
         // Redirect back or wherever you want

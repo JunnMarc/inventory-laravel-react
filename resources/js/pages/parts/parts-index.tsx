@@ -16,7 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle } from 'lucide-react';
+import { Frown } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { route } from 'ziggy-js';
 
@@ -55,7 +55,7 @@ export default function Parts() {
           <CardContent>
             {parts.length === 0 ? (
               <div className="flex flex-col items-center justify-center text-center text-muted-foreground py-10 space-y-4">
-                <AlertTriangle className="h-10 w-10 text-yellow-500" />
+                <Frown className="h-10 w-10 text-yellow-500" />
                 <p className="text-lg font-medium">No parts been added.</p>
                 <Button onClick={handleAdd}>Add your first parts</Button>
               </div>
