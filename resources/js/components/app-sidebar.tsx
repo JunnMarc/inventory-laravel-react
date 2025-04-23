@@ -35,7 +35,7 @@ const mainNavItems: NavItem[] = [
         icon: Folder },
     { 
         title: 'System Users', 
-        href: route('dashboard'), 
+        href: route('users.index'), 
         icon: Users },
     { 
         title: 'Orders', 

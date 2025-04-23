@@ -40,7 +40,7 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::get('/temp', function () {
-    return Inertia::render('temp/product');
+    return Inertia::render('temp/items');
 });
 
 

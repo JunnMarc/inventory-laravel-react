@@ -45,9 +45,9 @@ export default function UsersIndex() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Users" />
       <div className="p-6 flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
-        <section className="flex-1 bg-white dark:bg-gray-900 rounded shadow-sm overflow-hidden flex flex-col">
+        <section className="flex-1 bg-white dark:bg-neutral-900 rounded shadow-sm overflow-hidden flex flex-col">
           <div className="px-4 pt-4 pb-2">
-            <h1 className="text-xl font-semibold text-gray-800 dark:text-white">System Users</h1>
+            <h1 className="text-xl font-semibold text-neutral-800 dark:text-white">System Users</h1>
           </div>
 
           <div className="overflow-auto min-h-[300px] max-h-[300px]">
@@ -78,7 +78,7 @@ export default function UsersIndex() {
             )}
           </div>
 
-          <div className="px-4 py-2 border-t border-gray-200 dark:border-gray-700 text-sm flex justify-between items-center text-gray-600 dark:text-gray-400">
+          <div className="px-4 py-2 border-t border-neutral-200 dark:border-neutral-700 text-sm flex justify-between items-center text-neutral-600 dark:text-neutral-400">
             <span>
               Showing {users.from} to {users.to} of {users.total} entries
             </span>
@@ -86,7 +86,7 @@ export default function UsersIndex() {
               {users.links.map((link: any, i: number) => (
                 <button
                   key={i}
-                  className={`px-2 py-1 rounded text-sm ${link.active ? 'bg-primary text-white dark:bg-gray-800 dark:text-gray-300' : 'hover:bg-gray-100 dark:hover:bg-gray-800'} disabled:opacity-50`}
+                  className={`px-2 py-1 rounded text-sm ${link.active ? 'bg-primary text-white dark:bg-neutral-800 dark:text-neutral-300' : 'hover:bg-neutral-100 dark:hover:bg-neutral-800'} disabled:opacity-50`}
                   dangerouslySetInnerHTML={{ __html: link.label }}
                   disabled={!link.url}
                   onClick={() =>
@@ -103,29 +103,29 @@ export default function UsersIndex() {
           </div>
         </section>
 
-        <aside className="w-full max-w-xs bg-white dark:bg-gray-900 rounded shadow-sm p-4">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Filter</h2>
+        <aside className="w-full max-w-xs bg-white dark:bg-neutral-900 rounded shadow-sm p-4">
+          <h2 className="text-lg font-semibold text-neutral-800 dark:text-white mb-4">Filter</h2>
           <form onSubmit={handleSearch} className="space-y-4 text-sm">
             <div>
-              <label htmlFor="name" className="block mb-1 font-medium text-gray-700 dark:text-gray-300">
+              <label htmlFor="name" className="block mb-1 font-medium text-neutral-700 dark:text-neutral-300">
                 Name
               </label>
               <input
                 id="name"
                 value={form.name}
                 onChange={handleChange}
-                className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded px-2 py-1 text-sm"
+                className="w-full border border-neutral-300 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded px-2 py-1 text-sm"
               />
             </div>
             <div>
-              <label htmlFor="email" className="block mb-1 font-medium text-gray-700 dark:text-gray-300">
+              <label htmlFor="email" className="block mb-1 font-medium text-neutral-700 dark:text-neutral-300">
                 Email
               </label>
               <input
                 id="email"
                 value={form.email}
                 onChange={handleChange}
-                className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded px-2 py-1 text-sm"
+                className="w-full border border-neutral-300 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded px-2 py-1 text-sm"
               />
             </div>
             <div className="flex space-x-2 pt-2">
