@@ -32,7 +32,7 @@ class CategoryController extends Controller
     // Optional index method to list categories
     public function index()
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::orderBy('category_name')->get();
 
         return Inertia::render('categories/categories-index', [
             'categories' => $categories,

@@ -7,97 +7,70 @@ import { Frown } from 'lucide-react';
 import { route } from 'ziggy-js';
 import { useState } from 'react';
 
-type Part = {
-  id: number;
-  part_name: string;
-  part_serial: string;
-  category: any;
-};
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Users', href: '/users' }];
 
-type Category = {
-  id: number;
-  category_name: string;
-};
-
-const breadcrumbs: BreadcrumbItem[] = [
-  { title: 'Parts', href: '/parts' },
-];
-
-export default function PartsIndex() {
-  const { props } = usePage<PageProps<{ parts: any; filters: any; categories: Category[] }>>();
-  const { parts, filters, categories } = props;
+export default function UsersIndex() {
+  const { props } = usePage<PageProps<{ users: any; filters: any }>>();
+  const { users, filters } = props;
 
   const [form, setForm] = useState({
     name: filters.name || '',
-    serial: filters.serial || '',
-    category_id: filters.category_id || '',
+    email: filters.email || '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setForm((prev) => ({ ...prev, [id]: value }));
   };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.get(route('parts.index'), form, {
+    router.get(route('users.index'), form, {
       preserveScroll: true,
       preserveState: true,
-      only: ['parts'],
+      only: ['users'],
     });
   };
 
   const handleClear = () => {
-    setForm({ name: '', serial: '', category_id: '' });
-    router.get(route('parts.index'), {}, {
+    setForm({ name: '', email: '' });
+    router.get(route('users.index'), {}, {
       preserveScroll: true,
       preserveState: true,
-      only: ['parts'],
+      only: ['users'],
     });
   };
 
-  const handleAdd = () => router.visit(route('parts.create'));
-
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Parts" />
+      <Head title="Users" />
       <div className="p-6 flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
-        {/* Table Section */}
         <section className="flex-1 bg-white dark:bg-gray-900 rounded shadow-sm overflow-hidden flex flex-col">
           <div className="px-4 pt-4 pb-2">
-            <h1 className="text-xl font-semibold text-gray-800 dark:text-white">Computer Parts</h1>
-          </div>
-
-          <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-sm">
-            <Button variant="ghost" size="sm" onClick={handleAdd}>
-              <i className="far fa-file-alt mr-1" />
-              New
-            </Button>
+            <h1 className="text-xl font-semibold text-gray-800 dark:text-white">System Users</h1>
           </div>
 
           <div className="overflow-auto min-h-[300px] max-h-[300px]">
-            {parts.data.length === 0 ? (
+            {users.data.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground space-y-4">
                 <Frown className="h-10 w-10 text-yellow-500" />
-                <p className="text-lg font-medium">No parts found.</p>
+                <p className="text-lg font-medium">No users found.</p>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Name</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead className="text-center">Stock</TableHead>
-                    <TableHead className="text-center">Price</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead className="text-right">Created</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {parts.data.map((part: Part) => (
-                    <TableRow key={part.id}>
-                      <TableCell>{part.part_name}</TableCell>
-                      <TableCell>{part.category?.category_name || '—'}</TableCell>
-                      <TableCell className="text-center">0</TableCell>
-                      <TableCell className="text-center">$0.00</TableCell>
+                  {users.data.map((user: any) => (
+                    <TableRow key={user.id}>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell className="text-right">{new Date(user.created_at).toLocaleDateString()}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -107,10 +80,10 @@ export default function PartsIndex() {
 
           <div className="px-4 py-2 border-t border-gray-200 dark:border-gray-700 text-sm flex justify-between items-center text-gray-600 dark:text-gray-400">
             <span>
-              Showing {parts.from} to {parts.to} of {parts.total} entries
+              Showing {users.from} to {users.to} of {users.total} entries
             </span>
             <div className="flex items-center gap-2">
-              {parts.links.map((link: any, i: number) => (
+              {users.links.map((link: any, i: number) => (
                 <button
                   key={i}
                   className={`px-2 py-1 rounded text-sm ${link.active ? 'bg-primary text-white dark:bg-gray-800 dark:text-gray-300' : 'hover:bg-gray-100 dark:hover:bg-gray-800'} disabled:opacity-50`}
@@ -121,7 +94,7 @@ export default function PartsIndex() {
                     router.visit(link.url, {
                       preserveScroll: true,
                       preserveState: true,
-                      only: ['parts'],
+                      only: ['users'],
                     })
                   }
                 />
@@ -130,7 +103,6 @@ export default function PartsIndex() {
           </div>
         </section>
 
-        {/* Filter Section */}
         <aside className="w-full max-w-xs bg-white dark:bg-gray-900 rounded shadow-sm p-4">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Filter</h2>
           <form onSubmit={handleSearch} className="space-y-4 text-sm">
@@ -146,41 +118,19 @@ export default function PartsIndex() {
               />
             </div>
             <div>
-              <label htmlFor="serial" className="block mb-1 font-medium text-gray-700 dark:text-gray-300">
-                Serial
+              <label htmlFor="email" className="block mb-1 font-medium text-gray-700 dark:text-gray-300">
+                Email
               </label>
               <input
-                id="serial"
-                value={form.serial}
+                id="email"
+                value={form.email}
                 onChange={handleChange}
                 className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded px-2 py-1 text-sm"
               />
             </div>
-            <div>
-              <label htmlFor="category_id" className="block mb-1 font-medium text-gray-700 dark:text-gray-300">
-                Category
-              </label>
-              <select
-                id="category_id"
-                value={form.category_id}
-                onChange={handleChange}
-                className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded px-2 py-1 text-sm"
-              >
-                <option value="">All Categories</option>
-                {categories.map((cat: any) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.category_name}
-                  </option>
-                ))}
-              </select>
-            </div>
             <div className="flex space-x-2 pt-2">
-              <Button type="submit" className="w-full">
-                Search
-              </Button>
-              <Button type="button" variant="secondary" onClick={handleClear} className="w-full">
-                Clear
-              </Button>
+              <Button type="submit" className="w-full">Search</Button>
+              <Button type="button" variant="secondary" onClick={handleClear} className="w-full">Clear</Button>
             </div>
           </form>
         </aside>

@@ -56,3 +56,14 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export type Paginated<T> = {
+  data: T[];
+  total: number;
+  from: number | null;
+  to: number | null;
+  current_page: number;
+  last_page: number;
+  links: { url: string | null; label: string; active: boolean }[];
+};
+
+

@@ -12,6 +12,7 @@ class Part extends Model
     protected $fillable = ['part_name', 'part_serial', 'category_id'];
     public function category() 
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->belongsTo(Category::class);
     }
+
 }

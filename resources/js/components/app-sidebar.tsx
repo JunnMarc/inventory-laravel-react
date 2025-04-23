@@ -43,7 +43,7 @@ const mainNavItems: NavItem[] = [
         icon: ShoppingCart },
     {
         title: 'About',
-        href: route('dashboard'),
+        href: route('about'),
         icon: Info,
     },
 ];

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('parts', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('category_id');
+            $table->id()->primary();
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('part_name', 64);
             $table->string('part_serial', 64);
             $table->timestamps();

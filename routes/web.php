@@ -5,6 +5,7 @@ use Inertia\Inertia;
 
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -27,6 +28,19 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     // Optional index or other routes if you want:
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+});
+
+
+Route::get('/about', function () {
+    return Inertia::render('about');
+})->name('about');
+
+Route::get('/temp', function () {
+    return Inertia::render('temp/product');
 });
 
 
