@@ -7,6 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandInput, CommandItem, CommandList, CommandEmpty } from '@/components/ui/command';
+import {
+  ArrowLeft,
+  Save,
+  Trash2,
+  Package,
+  Truck,
+} from "lucide-react";
 
 type Category = {
   id: number;
@@ -55,11 +62,103 @@ export default function PartsCreate() {
     form.part_name.trim() !== '' &&
     form.part_serial.trim() !== '';
 
+  const handleBack = () => window.history.back();
+
   return (
     <AppLayout breadcrumbs={[{ title: 'Parts', href: '/parts' }, { title: 'Create', href: '/parts/create' }]}>
       <Head title="Add New Part" />
-      <div className="max-w-4xl mx-auto py-10">
-        <Card className="w-full max-w-xl mx-auto">
+      <div className="p-4 space-y-6 bg-white dark:bg-neutral-950">
+        {/* Top Toolbar */}
+        <div className="flex items-center space-x-4 px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded bg-white dark:bg-neutral-800 mb-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center space-x-1 text-gray-700 hover:text-gray-900"
+            onClick={handleBack}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center space-x-1 text-green-700 hover:text-green-900"
+          >
+            <Save className="h-4 w-4" />
+            <span>Save</span>
+          </Button>
+        </div>
+        <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
+          <section className="md:w-1/3 flex flex-col space-y-6 bg-white rounded shadow-sm border border-neutral-200 dark:border-neutral-700 p-4">
+            <h2 className="text-gray-800 font-normal mb-3">Information</h2>
+            <div className="space-y-4">
+              <Label htmlFor="category">Category</Label>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" role="combobox" className="w-full justify-between">
+                    {selectedCategory ? selectedCategory.category_name : 'Select a category'}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search category..."
+                      value={searchTerm}
+                      onValueChange={(value) => setSearchTerm(value)}
+                    />
+                    <CommandList>
+                      <CommandEmpty>
+                        No results.
+                        <br />
+                        <span
+                          className="text-blue-600 underline cursor-pointer"
+                          onClick={() => handleCreateNewCategory(searchTerm)}
+                        >
+                          Create new category "{searchTerm}"
+                        </span>
+                      </CommandEmpty>
+                      {categories
+                        .filter(cat =>
+                          cat.category_name.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
+                        .map((cat) => (
+                          <CommandItem
+                            key={cat.id}
+                            value={cat.category_name}
+                            onSelect={() => handleSelectCategory(cat.id)}
+                          >
+                            {cat.category_name}
+                          </CommandItem>
+                        ))}
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {errors.category_id && <p className="text-sm text-red-500">{errors.category_id}</p>}
+
+              <Label htmlFor="part_name">Part Name</Label>
+                <Input
+                  id="part_name"
+                  name="part_name"
+                  value={form.part_name}
+                  onChange={handleChange}
+                  className={errors.part_name ? 'border-red-500' : ''}
+                />
+                {errors.part_name && <p className="text-sm text-red-500">{errors.part_name}</p>}
+                
+              <Label htmlFor="part_serial">Model Serial Number</Label>
+                <Input
+                  id="part_serial"
+                  name="part_serial"
+                  value={form.part_serial}
+                  onChange={handleChange}
+                  className={errors.part_serial ? 'border-red-500' : ''}
+                />
+                {errors.part_serial && <p className="text-sm text-red-500">{errors.part_serial}</p>}
+            </div>
+          </section>
+        </div>
+        {/* <Card className="w-full max-w-xl mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold text-foreground">Add a New Computer Part</CardTitle>
           </CardHeader>
@@ -71,7 +170,6 @@ export default function PartsCreate() {
               }}
               className="space-y-6"
             >
-              {/* Category Select with Popover */}
               <div className="space-y-1.5">
                 <Label htmlFor="category">Category</Label>
                 <Popover open={open} onOpenChange={setOpen}>
@@ -119,7 +217,6 @@ export default function PartsCreate() {
                 {errors.category_id && <p className="text-sm text-red-500">{errors.category_id}</p>}
               </div>
 
-              {/* Part Name */}
               <div className="space-y-1.5">
                 <Label htmlFor="part_name">Part Name</Label>
                 <Input
@@ -132,7 +229,6 @@ export default function PartsCreate() {
                 {errors.part_name && <p className="text-sm text-red-500">{errors.part_name}</p>}
               </div>
 
-              {/* Serial Number */}
               <div className="space-y-1.5">
                 <Label htmlFor="part_serial">Model Serial Number</Label>
                 <Input
@@ -156,7 +252,7 @@ export default function PartsCreate() {
               </div>
             </form>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </AppLayout>
   );

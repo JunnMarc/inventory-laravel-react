@@ -30,7 +30,6 @@ class PartController extends Controller
         $parts = $query->with('category')->paginate(10)->withQueryString();
         $categories = Category::orderBy('category_name')->get(['id', 'category_name']);
 
-        // Return Inertia response
         return Inertia::render('parts/parts-index', [
             'parts' => $parts,
             'filters' => $filters,

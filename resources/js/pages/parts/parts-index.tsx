@@ -63,7 +63,7 @@ export default function PartsIndex() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Parts" />
       
-      <div className="p-4 space-y-6 bg-neutral-100 dark:bg-neutral-950">
+      <div className="p-4 space-y-6 bg-white dark:bg-neutral-950">
         {/* Top Toolbar */}
         <div className="flex items-center space-x-4 px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded bg-white dark:bg-neutral-800 mb-2">
           <Button
@@ -71,7 +71,7 @@ export default function PartsIndex() {
             size="sm"
             className="flex items-center space-x-1 text-neutral-700 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white"
             onClick={handleAdd}
-          >
+          > 
             <File className="h-4 w-4" />
             <span>New</span>
           </Button>
@@ -105,17 +105,13 @@ export default function PartsIndex() {
           {/* Table Section */}
           <section className="flex-1 bg-white dark:bg-neutral-900 rounded shadow-sm overflow-hidden flex flex-col">
             <div className="px-4 pt-4 pb-2">
-              <h1 className="text-xl font-semibold text-neutral-800 dark:text-white">Computer Parts</h1>
+              <h1 className="text-xl font-semibold text-neutral-800 dark:text-white">Parts</h1>
             </div>
 
             <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-200 dark:border-neutral-700 text-sm">
-              <Button variant="ghost" size="sm" onClick={handleAdd}>
-                <i className="far fa-file-alt mr-1" />
-                New
-              </Button>
             </div>
 
-            <div className="overflow-auto min-h-[300px] max-h-[300px] ">
+            <div className="overflow-auto min-h-[300px] max-h-[300px]">
               {parts.data.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground space-y-4">
                   <Frown className="h-10 w-10 text-yellow-500" />
