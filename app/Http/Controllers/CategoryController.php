@@ -29,13 +29,32 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
 
-    // Optional index method to list categories
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::orderBy('category_name')->get();
+        $categories = Category::query()
+            ->when($request->search, fn($q) => $q->where('name', 'like', "%{$request->search}%"))
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('categories/categories-index', [
             'categories' => $categories,
+            'filters' => [
+                'search' => $request->search,
+            ],
         ]);
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => ['required', 'array'],
+            'ids.*' => ['integer', 'exists:categories,id'],
+        ]);
+
+        Category::whereIn('id', $request->ids)->delete();
+
+        return back()->with('success', 'Selected categories deleted.');
+    }
+
 }

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id')->nullable();
             $table->string('part_name', 64);
             $table->string('part_serial', 64);
+            $table->decimal('unit_price', 10, 2)->nullable();
+            $table->unsignedInteger('stock_threshold')->default(10);
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');

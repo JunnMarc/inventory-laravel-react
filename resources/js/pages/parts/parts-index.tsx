@@ -1,18 +1,38 @@
 import { Head, usePage, router } from '@inertiajs/react';
 import { PageProps, BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/app-layout';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Frown } from 'lucide-react';
+import { Frown, File, Trash2 } from 'lucide-react';
 import { route } from 'ziggy-js';
 import { useState } from 'react';
-import { File, Save, Trash2, Package } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 type Part = {
   id: number;
   part_name: string;
   part_serial: string;
   category: any;
+  inventory_item?: {
+    id: number;
+    quantity: number;
+    unit_price: number;
+    stock_threshold: number;
+  };
 };
 
 type Category = {
@@ -20,9 +40,7 @@ type Category = {
   category_name: string;
 };
 
-const breadcrumbs: BreadcrumbItem[] = [
-  { title: 'Parts', href: '/parts' },
-];
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Parts', href: '/parts' }];
 
 export default function PartsIndex() {
   const { props } = usePage<PageProps<{ parts: any; filters: any; categories: Category[] }>>();
@@ -33,6 +51,9 @@ export default function PartsIndex() {
     serial: filters.serial || '',
     category_id: filters.category_id || '',
   });
+
+  const [selectedParts, setSelectedParts] = useState<number[]>([]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -59,10 +80,36 @@ export default function PartsIndex() {
 
   const handleAdd = () => router.visit(route('parts.create'));
 
+  const toggleSelect = (id: number) => {
+    setSelectedParts(prev =>
+      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+    );
+  };
+
+  const selectAll = () => {
+    if (selectedParts.length === parts.data.length) {
+      setSelectedParts([]);
+    } else {
+      setSelectedParts(parts.data.map((p: Part) => p.id));
+    }
+  };
+
+  const handleDelete = () => {
+    router.post(route('parts.bulk-delete'), { ids: selectedParts }, {
+      onSuccess: () => {
+        setSelectedParts([]);
+        setShowDeleteDialog(false);
+      },
+      preserveScroll: true,
+      preserveState: true,
+      only: ['parts'],
+    });
+  };
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Parts" />
-      
+
       <div className="p-4 space-y-6 bg-white dark:bg-neutral-950">
         {/* Top Toolbar */}
         <div className="flex items-center space-x-4 px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded bg-white dark:bg-neutral-800 mb-2">
@@ -71,44 +118,47 @@ export default function PartsIndex() {
             size="sm"
             className="flex items-center space-x-1 text-neutral-700 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white"
             onClick={handleAdd}
-          > 
+          >
             <File className="h-4 w-4" />
             <span>New</span>
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center space-x-1 text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-200"
-          >
-            <Trash2 className="h-4 w-4" />
-            <span>Delete</span>
-          </Button>
-          {/* <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center space-x-1 text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-200 ml-4"
-          >
-            <Package className="h-4 w-4" />
-            <span>Adjust Quantity</span>
-          </Button> */}
-          {/* <div className="flex-grow" />
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-            onClick={() => window.history.back()}
-          >
-            Back
-          </Button> */}
+
+          <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-1 text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-200"
+                disabled={selectedParts.length === 0}
+              >
+                <Trash2 className="h-4 w-4" />
+                <span>Delete</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Delete Parts</DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to delete {selectedParts.length} selected part(s)? This action cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-end gap-2 mt-4">
+                <Button variant="secondary" onClick={() => setShowDeleteDialog(false)}>
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={handleDelete}>
+                  Delete
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
+
         <div className="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
           {/* Table Section */}
           <section className="flex-1 bg-white dark:bg-neutral-900 rounded shadow-sm overflow-hidden flex flex-col">
             <div className="px-4 pt-4 pb-2">
               <h1 className="text-xl font-semibold text-neutral-800 dark:text-white">Parts</h1>
-            </div>
-
-            <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-200 dark:border-neutral-700 text-sm">
             </div>
 
             <div className="overflow-auto min-h-[300px] max-h-[300px]">
@@ -121,19 +171,58 @@ export default function PartsIndex() {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>
+                        <input
+                          type="checkbox"
+                          onChange={selectAll}
+                          checked={selectedParts.length === parts.data.length && parts.data.length > 0}
+                        />
+                      </TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Category</TableHead>
                       <TableHead className="text-center">Stock</TableHead>
                       <TableHead className="text-center">Price</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {parts.data.map((part: Part) => (
                       <TableRow key={part.id}>
+                        <TableCell>
+                          <input
+                            type="checkbox"
+                            checked={selectedParts.includes(part.id)}
+                            onChange={() => toggleSelect(part.id)}
+                          />
+                        </TableCell>
                         <TableCell>{part.part_name}</TableCell>
                         <TableCell>{part.category?.category_name || '—'}</TableCell>
-                        <TableCell className="text-center">0</TableCell>
-                        <TableCell className="text-center">$0.00</TableCell>
+                        <TableCell className="text-center">
+                          {part.inventory_item ? (
+                            <span className={part.inventory_item.quantity <= part.inventory_item.stock_threshold
+                              ? "text-yellow-500 font-medium"
+                              : ""}>
+                              {part.inventory_item.quantity}
+                              {part.inventory_item.quantity <= part.inventory_item.stock_threshold && (
+                                <span className="ml-1 text-xs text-red-500">(Low)</span>
+                              )}
+                            </span>
+                          ) : (
+                            '0'
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {part.inventory_item?.unit_price ? `$${part.inventory_item.unit_price.toFixed(2)}` : '$0.00'}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => router.visit(route('parts.edit', part.id))}
+                          >
+                            Edit
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

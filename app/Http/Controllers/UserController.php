@@ -13,8 +13,8 @@ class UserController extends Controller
         $filters = $request->only(['name', 'email']);
 
         $users = User::query()
-            ->when($filters['name'] ?? null, fn ($q, $name) => $q->where('name', 'like', "%{$name}%"))
-            ->when($filters['email'] ?? null, fn ($q, $email) => $q->where('email', 'like', "%{$email}%"))
+            ->when($filters['name'] ?? null, fn($q, $name) => $q->where('name', 'like', "%{$name}%"))
+            ->when($filters['email'] ?? null, fn($q, $email) => $q->where('email', 'like', "%{$email}%"))
             ->paginate(10)
             ->withQueryString();
 
@@ -23,4 +23,28 @@ class UserController extends Controller
             'filters' => $filters,
         ]);
     }
+
+    public function updateRole(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'role' => ['required', 'in:employee,manager'],
+        ]);
+
+        $user->update(['role' => $validated['role']]);
+
+        return back()->with('success', 'Role updated.');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => ['required', 'array'],
+            'ids.*' => ['integer', 'exists:users,id'],
+        ]);
+
+        User::whereIn('id', $request->ids)->delete();
+
+        return back()->with('success', 'Selected users deleted.');
+    }
+
 }

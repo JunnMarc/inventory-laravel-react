@@ -27,17 +27,20 @@ class PartController extends Controller
             $query->where('category_id', $filters['category_id']);
         }
 
-        $parts = $query->with('category')->paginate(10)->withQueryString();
+        $parts = $query->with(['category', 'inventoryItem'])
+            ->paginate(10)
+            ->withQueryString();
+
         $categories = Category::orderBy('category_name')->get(['id', 'category_name']);
 
         return Inertia::render('parts/parts-index', [
             'parts' => $parts,
             'filters' => $filters,
-            'categories' => $categories,
+            'categories' => $categories
         ]);
     }
 
-    public function create() 
+    public function create()
     {
         $categories = Category::select('id', 'category_name')->get();
         return Inertia::render('parts/parts-create', [
@@ -51,9 +54,41 @@ class PartController extends Controller
             'part_name' => 'required|string|max:255',
             'part_serial' => 'nullable|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'stock_threshold' => 'required|string|max:255'
         ]);
 
         Part::create($validated);
         return redirect()->route('parts.index')->with('success', 'Part created successfully.');
+    }
+
+    public function edit(Part $part)
+    {
+        $categories = Category::all();
+        return Inertia::render('parts/parts-edit', [
+            'part' => $part,
+            'categories' => $categories,
+        ]);
+    }
+
+    public function update(Request $request, Part $part)
+    {
+        $validated = $request->validate([
+            'part_name' => 'required|string|max:255',
+            'part_serial' => 'nullable|string|max:255',
+            'category_id' => 'nullable|exists:categories,id',
+        ]);
+
+        $part->update($validated);
+
+        return redirect()->route('parts.index')->with('success', 'Part updated successfully.');
+    }
+
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        Part::whereIn('id', $ids)->delete();
+
+        return back();
     }
 }

@@ -1,90 +1,144 @@
-import { Head, usePage, router } from '@inertiajs/react';
+import React, { ReactNode, useState } from 'react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { PageProps } from '@/types';
-import AppLayout from '@/layouts/app-layout';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle } from 'lucide-react';
-import { type BreadcrumbItem } from '@/types';
-import { route } from 'ziggy-js';
+import AppLayout from '@/layouts/app-layout';
+import { Plus, Trash2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Checkbox } from '@/components/ui/checkbox';
+import { format } from 'date-fns';
 
-type Category = {
+interface Category {
+  category_name: ReactNode;
   id: number;
-  category_name: string;
-};
+  name: string;
+  description: string;
+  created_at: string;
+}
 
-const breadcrumbs: BreadcrumbItem[] = [
-  {
-    title: 'Categories',
-    href: '/categories',
-  },
-];
+interface Filters {
+  search: string;
+}
 
-export default function Categories() {
-  const { props } = usePage<PageProps<{ categories: Category[] }>>();
-  const categories = props.categories;
+interface Props extends PageProps {
+  categories: {
+    data: Category[];
+    links: { url: string | null; label: string; active: boolean }[];
+  };
+  filters: Filters;
+}
 
-  const handleAdd = () => {
-    router.visit(route('categories.create'));
+export default function CategoriesIndex({ categories, filters }: Props) {
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [filterSearch, setFilterSearch] = useState(filters?.search ?? '');
+
+  const toggleSelection = (id: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+    );
+  };
+
+  const isAllSelected = categories.data.length > 0 && selectedIds.length === categories.data.length;
+
+  const toggleAll = () => {
+    if (isAllSelected) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(categories.data.map((cat) => cat.id));
+    }
+  };
+
+  const applyFilters = () => {
+    router.visit(route('categories.index'), {
+      data: { search: filterSearch },
+      preserveScroll: true,
+      preserveState: true,
+    });
+  };
+
+  const deleteSelected = () => {
+    if (confirm('Are you sure you want to delete selected categories?')) {
+      router.delete(route('categories.bulk-destroy'), {
+        data: { ids: selectedIds },
+        preserveScroll: true,
+        onSuccess: () => setSelectedIds([]),
+      });
+    }
   };
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
+    <AppLayout>
       <Head title="Categories" />
-      <div className="p-6 space-y-6 relative">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Categories</CardTitle>
 
-            {categories.length > 0 && (
-              <Button onClick={handleAdd}>Add category</Button>
-            )}
-          </CardHeader>
-
-          <CardContent>
-            {categories.length === 0 ? (
-              <div className="flex flex-col items-center justify-center text-center text-muted-foreground py-10 space-y-4">
-                <AlertTriangle className="h-10 w-10 text-yellow-500" />
-                <p className="text-lg font-medium">No categories have been added.</p>
-                <Button onClick={handleAdd}>Add your first category</Button>
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {categories.map((category: Category) => (
-                    <TableRow key={category.id}>
-                      <TableCell>{category.category_name}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Optional floating add button */}
-        {/*
-        <div className="fixed bottom-6 right-6">
-          <Button onClick={handleAdd}>Add category</Button>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex gap-2">
+          <Input
+            placeholder="Search categories..."
+            value={filterSearch}
+            onChange={(e) => setFilterSearch(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
+            className="w-64"
+          />
+          <Button variant="outline" onClick={applyFilters}>Search</Button>
         </div>
-        */}
+        <div className="flex gap-2">
+          {selectedIds.length > 0 && (
+            <Button variant="destructive" size="sm" onClick={deleteSelected}>
+              <Trash2 className="w-4 h-4 mr-2" /> Delete ({selectedIds.length})
+            </Button>
+          )}
+          <Button size="sm" onClick={() => router.visit(route('categories.create'))}>
+            <Plus className="w-4 h-4 mr-2" /> New Category
+          </Button>
+        </div>
+      </div>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[50px]">
+              <Checkbox checked={isAllSelected} onCheckedChange={toggleAll} />
+            </TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Created</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {categories.data.map((category) => (
+            <TableRow key={category.id}>
+              <TableCell>
+                <Checkbox
+                  checked={selectedIds.includes(category.id)}
+                  onCheckedChange={() => toggleSelection(category.id)}
+                />
+              </TableCell>
+              <TableCell>{category.category_name}</TableCell>
+              <TableCell>{category.description}</TableCell>
+              <TableCell>{format(new Date(category.created_at), 'PP')}</TableCell>
+              <TableCell className="text-right">
+                <Button variant="outline" size="sm">
+                  Edit
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <div className="mt-4 flex justify-end gap-2">
+        {categories.links.map((link, i) => (
+          <Button
+            key={i}
+            variant={link.active ? 'default' : 'outline'}
+            size="sm"
+            disabled={!link.url}
+            onClick={() => link.url && router.visit(link.url, { preserveScroll: true })}
+            dangerouslySetInnerHTML={{ __html: link.label }}
+          />
+        ))}
       </div>
     </AppLayout>
   );

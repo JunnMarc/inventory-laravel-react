@@ -3,7 +3,8 @@ import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import type { User } from '@/types';
 import {
     BookOpen,
     ChevronDown,
@@ -18,6 +19,12 @@ import {
 import AppLogo from './app-logo';
 import { ZiggyVue} from 'ziggy-js'; // path may vary depending on your project
 console.log(ZiggyVue);
+
+type InertiaProps = {
+  auth: {
+    user: User;
+  };
+};
 
 const mainNavItems: NavItem[] = [
     {
@@ -34,13 +41,13 @@ const mainNavItems: NavItem[] = [
         href: route('categories.index'), 
         icon: Folder },
     { 
+        title: 'Orders', 
+        href:route('orders.index'), 
+        icon: ShoppingCart },
+    { 
         title: 'System Users', 
         href: route('users.index'), 
         icon: Users },
-    { 
-        title: 'Orders', 
-        href:route('dashboard'), 
-        icon: ShoppingCart },
     {
         title: 'About',
         href: route('about'),
@@ -62,6 +69,14 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { props } = usePage<InertiaProps>();
+    const user = props.auth?.user;
+    const filteredNavItems = mainNavItems.filter(item => {
+        if (item.title === 'System Users' && user.role !== 'manager') {
+            return false;
+        }
+        return true;
+    });
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -77,7 +92,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={filteredNavItems} />
             </SidebarContent>
 
             <SidebarFooter>
