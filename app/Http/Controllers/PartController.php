@@ -54,6 +54,7 @@ class PartController extends Controller
             'part_name' => 'required|string|max:255',
             'part_serial' => 'nullable|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'unit_price' => 'required',
             'stock_threshold' => 'required|string|max:255'
         ]);
 

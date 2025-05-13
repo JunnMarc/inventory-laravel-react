@@ -45,6 +45,10 @@ const mainNavItems: NavItem[] = [
         href:route('orders.index'), 
         icon: ShoppingCart },
     { 
+        title: 'Inventory out', 
+        href:route('stock-out.index'), 
+        icon: ShoppingCart },
+    { 
         title: 'System Users', 
         href: route('users.index'), 
         icon: Users },

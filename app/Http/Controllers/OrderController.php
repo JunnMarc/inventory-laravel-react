@@ -47,7 +47,7 @@ class OrderController extends Controller
     public function invoice(Order $order)
     {
         $order->load(['orderDetails.part']);
-
+        //dd($order);
         return Inertia::render('orders/orders-invoice', [
             'order' => $order->append('total_amount'),
         ]);

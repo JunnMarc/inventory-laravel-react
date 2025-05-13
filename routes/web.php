@@ -8,6 +8,7 @@ use App\Http\Controllers\PartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StockOutController;
 
 use App\Http\Middleware\AdminOnly;
 
@@ -58,6 +59,20 @@ Route::prefix('orders')->name('orders.')->group(function () {
 
     // Bulk delete
     Route::post('/bulk-delete', [OrderController::class, 'bulkDelete'])->name('bulk-delete');
+});
+
+Route::prefix('stock-out')->name('stock-out.')->group(function () {
+    Route::get('/', [StockOutController::class, 'index'])->name('index');
+    Route::get('/create', [StockOutController::class, 'create'])->name('create');
+    Route::post('/', [StockOutController::class, 'store'])->name('store');
+    Route::get('/{stockout}', [StockOutController::class, 'show'])->name('show');
+
+    // Invoice view and download
+    Route::get('/{stockout}/invoice', [StockOutController::class, 'invoice'])->name('invoice');
+    Route::get('/{stockout}/invoice/download', [StockOutController::class, 'downloadInvoice'])->name('invoice.download');
+
+    // Bulk delete
+    Route::post('/bulk-delete', [StockOutController::class, 'bulkDelete'])->name('bulk-delete');
 });
 
 

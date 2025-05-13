@@ -20,6 +20,7 @@ type Part = {
   id: number;
   part_name: string;
   part_serial: string;
+  unit_price: string;
   stock_threshold: number;
   category_id: number;
 };
@@ -36,6 +37,7 @@ export default function PartsEdit() {
     category_id: String(part.category_id),
     part_name: part.part_name,
     part_serial: part.part_serial,
+    unit_price: part.unit_price,
     stock_threshold: String(part.stock_threshold),
   });
 
@@ -62,6 +64,7 @@ export default function PartsEdit() {
     form.category_id !== '' &&
     form.part_name.trim() !== '' &&
     form.part_serial.trim() !== '' &&
+    form.unit_price.trim() !== '' &&
     form.stock_threshold.trim() !== '';
 
   const handleBack = () => router.visit(route('parts.index'));
@@ -104,7 +107,7 @@ export default function PartsEdit() {
 
           <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
             <section className="md:w-1/3 flex flex-col space-y-6 bg-white rounded shadow-sm border border-neutral-200 dark:border-neutral-700 p-4">
-              <h2 className="text-gray-800 font-normal mb-3">Information</h2>
+              <h2 className="text-gray-800 font-normal mb-3 border-b border-[#2a6b8a] pb-1">Information</h2>
               <div className="space-y-4">
                 <Label htmlFor="category">Category</Label>
                 <Popover open={open} onOpenChange={setOpen}>
@@ -171,17 +174,39 @@ export default function PartsEdit() {
                   className={errors.part_serial ? 'border-red-500' : ''}
                 />
                 {errors.part_serial && <p className="text-sm text-red-500">{errors.part_serial}</p>}
-
-                <Label htmlFor="stock_threshold">Stock Threshold</Label>
-                <Input
-                  id="stock_threshold"
-                  name="stock_threshold"
-                  value={form.stock_threshold}
-                  placeholder="10"
-                  onChange={handleChange}
-                  className={errors.stock_threshold ? 'border-red-500' : ''}
-                />
-                {errors.stock_threshold && <p className="text-sm text-red-500">{errors.stock_threshold}</p>}
+              </div>
+            </section>
+            <section className="md:w-150 flex flex-col space-y-6 bg-white rounded shadow-sm border border-neutral-200 dark:border-neutral-700 p-4">
+              <div>
+                <h2 className="text-gray-800 font-normal mb-3 border-b border-[#2a6b8a] pb-1">
+                  Inventory and Pricing
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                  <div>
+                    <Label htmlFor="stock_threshold">Stock Threshold</Label>
+                    <Input
+                      id="stock_threshold"
+                      name="stock_threshold"
+                      value={form.stock_threshold}
+                      placeholder='10'
+                      onChange={handleChange}
+                      className={errors.part_serial ? 'border-red-500' : ''}
+                    />
+                    {errors.part_serial && <p className="text-sm text-red-500">{errors.part_serial}</p>}
+                  </div>
+                  <div>
+                    <Label htmlFor="unit_price">Unit Price</Label>
+                    <Input
+                      id="unit_price"
+                      name="unit_price"
+                      value={form.unit_price}
+                      placeholder='1000.00'
+                      onChange={handleChange}
+                      className={errors.part_serial ? 'border-red-500' : ''}
+                    />
+                    {errors.part_serial && <p className="text-sm text-red-500">{errors.part_serial}</p>}
+                  </div>
+                </div>
               </div>
             </section>
           </div>
