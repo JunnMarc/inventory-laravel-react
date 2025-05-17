@@ -17,8 +17,8 @@ WORKDIR /var/www/html
 # Copy Laravel application code
 COPY . .
 
-# Install PHP dependencies (including Faker for seeding)
-RUN composer install --optimize-autoloader
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
 # Build frontend assets
 RUN npm install && npm run build
