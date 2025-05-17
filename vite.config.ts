@@ -14,6 +14,7 @@ const localIP =
     .find((iface) => iface?.family === 'IPv4' && !iface.internal)?.address || 'localhost';
 
 export default defineConfig({
+    base: '/build/', // <--- this is crucial for production
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
