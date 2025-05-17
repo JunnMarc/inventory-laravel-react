@@ -1,45 +1,33 @@
-# Use official PHP image with FPM
+# Use PHP with FPM and required extensions
 FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    nodejs \
-    npm \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    git curl zip unzip \
+    libpng-dev libonig-dev libxml2-dev libzip-dev \
+    nodejs npm \
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Install PHP extensions needed for Laravel
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd xml
-
-# Install Composer globally
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy existing application files
+# Copy Laravel application code
 COPY . .
 
-# Install PHP dependencies without dev packages, optimize autoloader
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Install Node packages and build assets
+# Build frontend assets
 RUN npm install && npm run build
 
-# Run migrations (optional: you can run migrations manually in your deploy pipeline)
-# RUN php artisan migrate --force
-
-# Change permissions for Laravel storage and cache (adjust as needed)
+# Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expose port 9000 for PHP-FPM
-EXPOSE 9000
+# Expose port used by Laravel's built-in server
+EXPOSE 8080
 
-# Start PHP-FPM server
-CMD ["php-fpm"]
+# Run Laravel server
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
