@@ -38,8 +38,8 @@ RUN npm install && npm run build
 # Change permissions for Laravel storage and cache (adjust as needed)
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expose port 9000 for PHP-FPM
-EXPOSE 9000
+# Expose port 8080 for Laravel's built-in web server
+EXPOSE 8080
 
-# Start PHP-FPM server
-CMD ["php-fpm"]
+# Start Laravel development server
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
