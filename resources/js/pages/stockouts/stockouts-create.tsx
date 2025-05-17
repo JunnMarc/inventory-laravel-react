@@ -119,11 +119,11 @@ export default function OrderCreate() {
                         {/* Customer Information */}
                         <div className="space-y-4 bg-white p-4 rounded-lg shadow">
                             <h2 className="text-lg font-semibold">
-                                Customer Information
+                                Assigned Information
                             </h2>
                             <div className="space-y-2">
                                 <Label htmlFor="customer_name">
-                                    Customer Name
+                                    Employee Name
                                 </Label>
                                 <Input
                                     id="customer_name"
@@ -134,7 +134,7 @@ export default function OrderCreate() {
                                             e.target.value
                                         )
                                     }
-                                    placeholder="Enter customer name"
+                                    placeholder="Enter employee name"
                                 />
                                 {errors.customer_name && (
                                     <p className="text-sm text-red-500">

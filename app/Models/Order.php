@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $appends = ['total_amount'];
-    protected $fillable = ['supplier_name', 'supplier_type', 'order_date'];
+    protected $fillable = ['supplier_name', 'supplier_type', 'order_date', 'status'];
 
     public function orderDetails()
     {

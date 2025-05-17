@@ -1,5 +1,3 @@
-// resources/js/Pages/Orders/Index.tsx
-
 import { Head, usePage, router } from '@inertiajs/react';
 import { PageProps, BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/app-layout';
@@ -160,6 +158,7 @@ export default function OrdersIndex() {
                                             <TableHead>Supplier</TableHead>
                                             <TableHead>Date</TableHead>
                                             <TableHead>Total</TableHead>
+                                            <TableHead>Status</TableHead>
                                             <TableHead className="text-center">Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -175,7 +174,19 @@ export default function OrdersIndex() {
                                                 </TableCell>
                                                 <TableCell>{order.supplier_name}</TableCell>
                                                 <TableCell>{order.created_at}</TableCell>
-                                                <TableCell>${order.total_amount.toFixed(2)}</TableCell>
+                                                <TableCell>
+                                                    {order.status === 'received' ? (
+                                                        <span className="px-2 py-1 text-sm font-semibold text-white bg-green-600 rounded">
+                                                            Received
+                                                        </span>
+                                                    ) : (
+                                                        <span className="px-2 py-1 text-sm font-semibold text-white bg-yellow-500 rounded">
+                                                            Pending
+                                                        </span>
+                                                    )}
+                                                </TableCell>
+
+                                                <TableCell>{order.created_at}</TableCell>
                                                 <TableCell className="text-right space-x-1">
                                                     <Button
                                                         size="sm"

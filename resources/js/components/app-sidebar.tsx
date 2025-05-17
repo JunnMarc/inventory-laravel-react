@@ -14,7 +14,8 @@ import {
     Package,
     Users,
     ShoppingCart,
-    Trash2
+    Trash2,
+    PanelBottomOpen 
   } from 'lucide-react';
 import AppLogo from './app-logo';
 import { ZiggyVue} from 'ziggy-js'; // path may vary depending on your project
@@ -33,7 +34,7 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     { 
-        title: 'Parts', 
+        title: 'Product', 
         href: route('parts.index'), 
         icon: Package },
     { 
@@ -47,7 +48,7 @@ const mainNavItems: NavItem[] = [
     { 
         title: 'Inventory out', 
         href:route('stock-out.index'), 
-        icon: ShoppingCart },
+        icon: PanelBottomOpen },
     { 
         title: 'System Users', 
         href: route('users.index'), 
@@ -62,12 +63,12 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
+        href: 'https://github.com/JunnMarc/inventory-laravel-react',
         icon: Folder,
     },
     {
         title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
+        href: 'https://github.com/JunnMarc/inventory-laravel-react/blob/main/README.md',
         icon: BookOpen,
     },
 ];

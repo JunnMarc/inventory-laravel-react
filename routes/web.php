@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/report', [DashboardController::class, 'download'])->name('dashboard.download');
 });
 
 Route::prefix('parts')->name('parts.')->group(function () {
@@ -52,6 +53,7 @@ Route::prefix('orders')->name('orders.')->group(function () {
     Route::get('/create', [OrderController::class, 'create'])->name('create');
     Route::post('/', [OrderController::class, 'store'])->name('store');
     Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+    Route::get('/{order}/receive', [OrderController::class, 'receive'])->name('receive');
 
     // Invoice view and download
     Route::get('/{order}/invoice', [OrderController::class, 'invoice'])->name('invoice');

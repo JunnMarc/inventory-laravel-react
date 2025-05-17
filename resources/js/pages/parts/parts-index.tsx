@@ -40,7 +40,7 @@ type Category = {
   category_name: string;
 };
 
-const breadcrumbs: BreadcrumbItem[] = [{ title: 'Parts', href: '/parts' }];
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Product', href: '/parts' }];
 
 export default function PartsIndex() {
   const { props } = usePage<PageProps<{ parts: any; filters: any; categories: Category[] }>>();
@@ -108,7 +108,7 @@ export default function PartsIndex() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Parts" />
+      <Head title="Products" />
 
       <div className="p-4 space-y-6 bg-white dark:bg-neutral-950">
         {/* Top Toolbar */}
@@ -139,7 +139,7 @@ export default function PartsIndex() {
               <DialogHeader>
                 <DialogTitle>Delete Parts</DialogTitle>
                 <DialogDescription>
-                  Are you sure you want to delete {selectedParts.length} selected part(s)? This action cannot be undone.
+                  Are you sure you want to delete {selectedParts.length} selected products(s)? This action cannot be undone.
                 </DialogDescription>
               </DialogHeader>
               <div className="flex justify-end gap-2 mt-4">
@@ -158,14 +158,14 @@ export default function PartsIndex() {
           {/* Table Section */}
           <section className="flex-1 bg-white dark:bg-neutral-900 rounded shadow-sm overflow-hidden flex flex-col">
             <div className="px-4 pt-4 pb-2">
-              <h1 className="text-xl font-semibold text-neutral-800 dark:text-white">Parts</h1>
+              <h1 className="text-xl font-semibold text-neutral-800 dark:text-white">Products</h1>
             </div>
 
             <div className="overflow-auto min-h-[300px] max-h-[300px]">
               {parts.data.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground space-y-4">
                   <Frown className="h-10 w-10 text-yellow-500" />
-                  <p className="text-lg font-medium">No parts found.</p>
+                  <p className="text-lg font-medium">No products found.</p>
                 </div>
               ) : (
                 <Table>

@@ -1,8 +1,13 @@
 import React from 'react';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { BreadcrumbItem } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Frown, File, Trash2, Eye, FileText, Download } from 'lucide-react';
+
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Orders', href: '/order-show' }];
 
 export default function OrdersShow() {
   const { order } = usePage().props as unknown as {
@@ -13,7 +18,7 @@ export default function OrdersShow() {
       total_amount: number;
       order_details: Array<{
         id: number;
-        part: { part_name: string }; // Changed from 'name' to 'part_name'
+        part: { part_name: string };
         quantity: number;
         unit_price: number;
       }>;
@@ -21,7 +26,7 @@ export default function OrdersShow() {
   };
 
   return (
-    <AppLayout>
+    <AppLayout breadcrumbs={breadcrumbs}>
       <Head title={`Order #${order.id}`} />
 
       <div className="max-w-4xl mx-auto space-y-6 p-4">
@@ -83,9 +88,21 @@ export default function OrdersShow() {
             </div>
 
             <div className="flex justify-end">
-              <Badge className="px-4 py-2 text-lg">
+              <Badge className="px-4 py-2 text-lg bg-gray-200 text-gray-800">
                 Total: ${order.total_amount?.toFixed(2) || '0.00'}
               </Badge>
+            </div>
+            <div className="flex justify-end">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-1 text-neutral-700 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white"
+                onClick={() => router.visit(route('orders.receive', order.id))}
+                disabled={order.status === 'received'}
+              >
+                <File className="h-4 w-4" />
+                <span>Mark as Received</span>
+              </Button>
             </div>
           </CardContent>
         </Card>

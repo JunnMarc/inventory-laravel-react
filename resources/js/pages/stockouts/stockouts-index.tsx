@@ -156,7 +156,7 @@ export default function StockOutIndex() {
                                                     checked={selectedStockOut.length === stock_out.data.length && stock_out.data.length > 0}
                                                 />
                                             </TableHead>
-                                            <TableHead>Customer</TableHead>
+                                            <TableHead>Assigned Supplier</TableHead>
                                             <TableHead>Reason</TableHead>
                                             <TableHead>Date</TableHead>
                                             <TableHead className="text-center">Actions</TableHead>
@@ -249,7 +249,7 @@ export default function StockOutIndex() {
                         <form onSubmit={handleSearch} className="space-y-4 text-sm">
                             <div>
                                 <label htmlFor="search" className="block mb-1 font-medium text-neutral-700 dark:text-neutral-300">
-                                    Search Customer
+                                    Search Supplier
                                 </label>
                                 <input
                                     id="search"

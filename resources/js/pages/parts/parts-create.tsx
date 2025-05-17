@@ -69,7 +69,7 @@ export default function PartsCreate() {
   const handleBack = () => router.visit(route('parts.index'))
 
   return (
-    <AppLayout breadcrumbs={[{ title: 'Parts', href: '/parts' }, { title: 'Create', href: '/parts/create' }]}>
+    <AppLayout breadcrumbs={[{ title: 'Product', href: '/parts' }, { title: 'Create', href: '/parts/create' }]}>
       <Head title="Add New Part" />
       <div className="p-4 space-y-6 bg-white dark:bg-neutral-950">
         <form
@@ -151,7 +151,7 @@ export default function PartsCreate() {
                 </Popover>
                 {errors.category_id && <p className="text-sm text-red-500">{errors.category_id}</p>}
 
-                <Label htmlFor="part_name">Part Name</Label>
+                <Label htmlFor="part_name">Product Name</Label>
                 <Input
                   id="part_name"
                   name="part_name"

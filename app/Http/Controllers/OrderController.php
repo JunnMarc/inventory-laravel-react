@@ -74,6 +74,36 @@ class OrderController extends Controller
         ]);
     }
 
+    public function receive(Request $request, Order $order)
+    {
+        // Eager load orderDetails
+        $order->load('orderDetails.part');
+
+        DB::transaction(function () use ($order) {
+            foreach ($order->orderDetails as $detail) {
+                $inventory = InventoryItem::firstOrCreate(
+                    ['part_id' => $detail->part_id],
+                    ['quantity' => 0]
+                );
+
+                $inventory->increment('quantity', $detail->quantity);
+
+                StockLog::create([
+                    'part_id' => $detail->part_id,
+                    'type' => 'in',
+                    'quantity' => $detail->quantity,
+                    'reference_type' => 'order',
+                    'reference_id' => $order->id,
+                ]);
+            }
+
+            $order->update(['status' => 'received']);
+        });
+
+        return redirect()->route('orders.index')->with('success', 'Order received and inventory updated.');
+    }
+
+
     public function store(Request $request)
     {
         $data = $request->validate(rules: [
@@ -100,20 +130,20 @@ class OrderController extends Controller
                     'quantity' => $item['quantity'],
                     'unit_price' => $item['unit_price'],
                 ]);
+                // scrapped
+                // $inventory = InventoryItem::firstOrCreate(
+                //     ['part_id' => $item['part_id']],
+                //     ['quantity' => 0]
+                // );
+                // $inventory->increment('quantity', $item['quantity']);
 
-                $inventory = InventoryItem::firstOrCreate(
-                    ['part_id' => $item['part_id']],
-                    ['quantity' => 0]
-                );
-                $inventory->increment('quantity', $item['quantity']);
-
-                StockLog::create([
-                    'part_id' => $item['part_id'],
-                    'type' => 'in',
-                    'quantity' => $item['quantity'],
-                    'reference_type' => 'order',
-                    'reference_id' => $order->id,
-                ]);
+                // StockLog::create([
+                //     'part_id' => $item['part_id'],
+                //     'type' => 'in',
+                //     'quantity' => $item['quantity'],
+                //     'reference_type' => 'order',
+                //     'reference_id' => $order->id,
+                // ]);
             }
         });
 
