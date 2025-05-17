@@ -19,7 +19,7 @@ export default defineConfig({
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
             ssr: 'resources/js/ssr.tsx',
-            refresh: true
+            refresh: true,
         }),
         react(),
         tailwindcss(),
@@ -41,13 +41,4 @@ export default defineConfig({
     //       port: 5175,
     //     },
     //   },
-    // Force HTTPS for assets in production
-    build: {
-        manifest: true,
-        rollupOptions: {
-            output: {
-                manualChunks: undefined,
-            },
-        },
-    },
 });
