@@ -19,6 +19,8 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
             ssr: 'resources/js/ssr.tsx',
             refresh: true,
+            // Force HTTPS for assets
+            url: process.env.APP_URL || 'https://inventory-laravel-react.onrender.com',
         }),
         react(),
         tailwindcss(),
@@ -40,4 +42,13 @@ export default defineConfig({
     //       port: 5175,
     //     },
     //   },
+    // Force HTTPS for assets in production
+    build: {
+        manifest: true,
+        rollupOptions: {
+            output: {
+                manualChunks: undefined,
+            },
+        },
+    },
 });
