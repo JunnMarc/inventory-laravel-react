@@ -29,5 +29,5 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 # Expose port used by Laravel's built-in server
 EXPOSE 8080
 
-# Run Laravel server
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+# Run migrations and then Laravel server
+CMD php artisan migrate --seed && php artisan serve --host=0.0.0.0 --port=8080
